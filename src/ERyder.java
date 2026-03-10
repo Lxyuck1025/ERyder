@@ -42,11 +42,13 @@ public class ERyder{
         System.out.println("The total fare is "+calculateFare(usageInMinutes)+".\n");
     }
 
-    public double calculateFare(int usageInMinutes){
+    private double calculateFare(int usageInMinutes){
         totalFare = BASE_FARE + (PER_MINUTE_FARE*usageInMinutes);
         return usageInMinutes*PER_MINUTE_FARE+BASE_FARE;
     }
-
+    public void publicCalculateFare(int usageInMinutes){
+        System.out.println(calculateFare(usageInMinutes));
+    }
     public void ride()
     {
         if( isAvailable){

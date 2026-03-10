@@ -7,6 +7,7 @@ public class Main {
         bike2.ride();
         bike2.printBikeDetails();
         bike2.printRideDetails(54);
-        bike2.calculateFare(54);
+        System.out.println("can't use private calculateFare methods");
+        bike2.publicCalculateFare(54);
     }
 }
