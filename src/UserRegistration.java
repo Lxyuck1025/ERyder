@@ -1,86 +1,94 @@
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Scanner;
-
 public class UserRegistration {
-    final static double VIP_DISCOUNT_UNDER_18_BIRTHDAY = 25.0;
-    final static double VIP_DISCOUNT_UNDER_18 = 20.0;
-    final static double VIP_BASE_FEE = 100.0;
-    
-    String fullName;
-    String emailAddress;
-    String dateOfBirth; 
-    long cardNumber;
-    String cardProvider;
-    String cardExpiryDate;
-    double feeToCharge;
-    int cvv;
-    String userType;
-    
-    boolean emailValid;
-    boolean minorAndBirthday;
-    boolean minor;
-    boolean ageValid;
-    boolean cardNumberValid;
-    boolean cardStillValid;
-    boolean validCVV;
-    
-    Scanner scanner = new Scanner(System.in);
-    
-    public void registration() {
-        System.out.println("Welcome to the ERyder Registration.");
-        System.out.println("1. Register as a Regular User");
-        System.out.println("2. Register as a VIP User");
-        System.out.print("Please enter your choice (1 or 2): ");
-        
-        String choice = scanner.nextLine();
-        
-        if (choice.equals("1")) {
-            userType = "Regular User";
-        } else {
-            userType = "VIP User";
+    public static final double VIP_DISCOUNT_UNDER_18_BIRTHDAY=25.0;
+    public static final double VIP_DISCOUNT_UNDER_18=20.0;
+    public static final double VIP_BASE_FEE=100.0;
+
+    private String fullName;
+    private String emailAddress;
+    private String dateOfBirth;
+    private long cardNumber;
+    private String cardProvider;
+    private String cardExpiryDate;
+    private double feeToCharge;
+    private int cvv;
+    private String userType;
+    private boolean emailValid=false;
+    private boolean minorAndBirthday=false;
+    private boolean minor=false;
+    private boolean ageValid=false;
+    private boolean cardNumberValid=false;
+    private boolean cardStillValid=false;
+    private boolean validCVV=false;
+
+    public void registration(){
+        System.out.println("Welcome to the ERyder Registration.\n" + //
+                        "Here are your two options:\n" + //
+                        "1. Register as a Regular User\n" + //
+                        "2. Register as a VIP User\n" + //
+                        "Please enter your choice (1 or 2):");
+        Scanner input = new Scanner(System.in);
+        int choice = input.nextInt();
+        if(choice==1){
+            userType="Regular User";
         }
-        
-        System.out.print("Please enter your full name: ");
-        fullName = scanner.nextLine();
-        
-        System.out.print("Please enter your email address: ");
-        emailAddress = scanner.nextLine();
+        else if(choice==2){
+            userType="VIP User";
+        }
+        else{
+            System.out.println("Invalid choice.Please restart the registration process");
+            return;
+        }
+
+        input.nextLine();
+        System.out.println("Let's proceed with the registration...\n");
+        System.out.println("Please enter your Full Name: ");
+        fullName=input.nextLine();
+
+        System.out.println("Please enter your Email Address: ");
+        emailAddress=input.nextLine();
+        System.out.println("Checking your email address's validity...\n");
         emailValid = analyseEmail(emailAddress);
-        
-        System.out.print("Please enter your date of birth (YYYY-MM-DD): ");
-        dateOfBirth = scanner.nextLine();
+
+        System.out.println("Please enter your date of birth as YYYY-MM-DD: ");
+        dateOfBirth = input.nextLine();
+        System.out.println("Checking your age validity...\n");
         LocalDate dob = LocalDate.parse(dateOfBirth);
         ageValid = analyseAge(dob);
-        
-        System.out.print("Please enter your card number: ");
-        cardNumber = scanner.nextLong();
-        scanner.nextLine(); 
+
+        System.out.println("Please enter your card number(only Visa, MasterCard, and " + //
+                        "American Express cards are accepted): ");
+        cardNumber = input.nextLong();
+        System.out.println("Checking your card number validity...\n");
         cardNumberValid = analyseCardNumber(cardNumber);
-        
-        System.out.print("Please enter your card expiry date (MM/YY): ");
-        cardExpiryDate = scanner.nextLine();
+
+        System.out.println("Please enter your card expiry date: ");
+        cardExpiryDate = input.nextLine();
+        System.out.println("Checking your expiry date validity...\n");
         cardStillValid = analyseCardExpiryDate(cardExpiryDate);
-        
-        System.out.print("Please enter the card's CVV: ");
-        cvv = scanner.nextInt();
-        scanner.nextLine(); 
+
+        System.out.println("Please enter your CVV: ");
+        cvv = input.nextInt();
+        System.out.println("Checking your CVV validity...\n");
         validCVV = analyseCVV(cvv);
-        
+
         finalCheckpoint();
+        input.close();
+
+
     }
-    
-    private boolean analyseEmail(String email) {
-        if (email.contains("@") && email.contains(".")) {
-            System.out.println("Email is valid");
-            return true;
-        } else {
-            System.out.println("Invalid email address. Going back to the start");
-            registration();
-            return false;
+    private boolean analyseEmail(String emailAddress){
+        if(emailAddress.contains("@") && emailAddress.contains(".")){
+            System.out.println("Email is valid.");
         }
+        else {
+            System.out.println("Invalid email address. Going back to the start of the registration.");
+            registration();
+        } 
+        return true;
     }
-    
     private boolean analyseAge(LocalDate dob){
         LocalDate currentDate = LocalDate.now();
         Period diff = Period.between(dob, currentDate);
@@ -103,55 +111,57 @@ public class UserRegistration {
         }
         return true;
     }
-    
-    private boolean analyseCardNumber(long cardNum) {
-        String s = String.valueOf(cardNum);
-        
-        if (s.startsWith("4") && (s.length() == 13 || s.length() == 16)) {
-            cardProvider = "VISA";
-        } else if (s.length() == 16 && s.startsWith("5")) {
-            cardProvider = "MasterCard";
-        } else if (s.length() == 15 && (s.startsWith("34") || s.startsWith("37"))) {
-            cardProvider = "American Express";
-        } else {
-            System.out.println("Invalid card provider. Restarting...");
-            registration();
-            return false;
+    private boolean analyseCardNumber(long cardNumber){
+        String cardNumStr = Long.toString(cardNumber);
+        int firstTwoDigits = Integer.parseInt(cardNumStr.substring(0,2));
+        int firstFourDigits = Integer.parseInt(cardNumStr.substring(0,4));
+        if ((cardNumStr.length()==13 || cardNumStr.length()==15) && cardNumStr.startsWith("4")){
+                cardProvider="VISA";
         }
-        System.out.println("Card provider: " + cardProvider);
-        return true;
-    }
-    
-    private boolean analyseCardExpiryDate(String expiry) {
-        int m = Integer.parseInt(expiry.substring(0, 2));
-        int y = Integer.parseInt(expiry.substring(3, 5)) + 2000;
-        
-        int curY = 2026;
-        int curM = 3;
-        
-        if (y > curY || (y == curY && m >= curM)) {
-            return true;
-        } else {
-            System.out.println("Expired card. Restarting...");
+        else if(cardNumStr.length()==16 && (firstTwoDigits>=51 && firstTwoDigits<=55 || firstFourDigits>=2221 &&firstFourDigits<=2720)){
+            cardProvider="MasterCard";
+        }
+        else if(cardNumStr.length()==15 && (cardNumStr.startsWith("34")||cardNumStr.startsWith("37"))){
+            cardProvider="American Express";
+        }
+        else{
+            System.out.println("Sorry, but we accept only VISA, MasterCard, or American Express cards. Please try again with a valid card.\n" + //
+                                "Going back to the start of the registration. ");
             registration();
         }
         return true;
     }
-    
-    private boolean analyseCVV(int cvvNum) {
-        String s = String.valueOf(cvvNum);
-        if ((cardProvider.equals("American Express") && s.length() == 4) ||
-            (!cardProvider.equals("American Express") && s.length() == 3)) {
-            return true;
-        } else {
-            System.out.println("Invalid CVV. Restarting...");
+    private boolean analyseCardExpiryDate(String cardExpiryDate){
+        int month = Integer.parseInt(cardExpiryDate.substring(0,2));
+        int year = Integer.parseInt(cardExpiryDate.substring(3,5))+2000;
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
+        int currentMonth = currentDate.getMonthValue();
+        if(year> currentYear||year==currentYear&&month>=currentMonth){
+            System.out.println("The card is still valid.");
+        }
+        else{
+            System.out.println("Sorry, your card has expired. Please use a different card.\n"+//
+            "Going back to the start fo the registration process…");
+             registration();
+        }
+        return true;
+    }
+    private boolean analyseCVV(int cvv){
+        String cvvStr = Integer.toString(cvv);
+        if(cardProvider.equals("American Express")&&cvvStr.length()==4
+        ||cardProvider.equals("VISA")&&cvvStr.length()==3||cardProvider.equals("MasterCard")&&cvvStr.length()==3){
+            System.out.println("Card CVV is valid.");
+        }
+        else{
+            System.out.println("Invalid CVV for the given card.\n" + 
+                                "Going back to the start of the registration process.");
             registration();
         }
         return true;
     }
-    
-    private void finalCheckpoint() {
-        if (emailValid && ageValid && cardNumberValid && cardStillValid && validCVV) {
+    private void finalCheckpoint(){
+        if(emailValid && cardNumberValid && ageValid && cardStillValid && validCVV){
             chargeFees();
         }
         else{
@@ -163,34 +173,32 @@ public class UserRegistration {
             if(!validCVV){System.out.println("Invalid CVV.");}
             System.out.println("Going back to the start of the registration process.");
             registration();
+
         }
     }
-    
-    private void chargeFees() {
-        if (minorAndBirthday) {
-            feeToCharge = VIP_BASE_FEE * 0.75;
-        } else if (minor) {
-            feeToCharge = VIP_BASE_FEE * 0.80;
-        } else {
-            feeToCharge = VIP_BASE_FEE;
+    private void chargeFees(){
+        if(minorAndBirthday){
+            feeToCharge=VIP_BASE_FEE*0.75;
         }
-        
-        String s = String.valueOf(cardNumber);
+        else if(minor){
+            feeToCharge=VIP_BASE_FEE*0.8;
+        }
+        else {
+            feeToCharge=VIP_BASE_FEE;
+        }
+        String cardNumStr = Long.toString(cardNumber);
         System.out.println("Thank you for your payment. \n" + 
                         "A fee of "+ feeToCharge+" has been charged to your card ending with "
-                        +s.substring(s.length()-4)); 
+                        +cardNumStr.substring(cardNumStr.length()-4));                 
     }
-    
-    public String toString() {
-        String s = String.valueOf(cardNumber);
-        String hidden = "";
-        for (int i = 0; i < s.length() - 4; i++) {
-            hidden += "*";
-        }
-        hidden += s.substring(s.length() - 4);
-        
-        return  "Registration successful! Here are your details:\nUser Type: " + userType 
+    @Override
+    public String toString(){
+        String cardNumberStr = Long.toString(cardNumber);
+        String censoredPart = cardNumberStr.substring(0,cardNumberStr.length()-4).replace(".","*");
+        String lastFourDigits = cardNumberStr.substring(cardNumberStr.length()-4);
+        String censoredNumber = censoredPart+lastFourDigits;
+        return "Registration successful! Here are your details:\nUser Type: " + userType 
         +"\nFull Name: "+fullName+"\nEmail Address: "+emailAddress+"\nDate of Birth: "+dateOfBirth
-        +"\nCard Number: "+hidden+"\nCard Provider: "+cardProvider+"\nCard Expiry Date: "+cardExpiryDate;
+        +"\nCard Number: "+censoredNumber+"\nCard Provider: "+cardProvider+"\nCard Expiry Date: "+cardExpiryDate;
     }
 }

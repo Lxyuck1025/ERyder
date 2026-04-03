@@ -1,18 +1,30 @@
 public class Main {
     public static void main(String[] args) throws Exception {
-        ERyder bike1 = new ERyder("12359i",89,true,5.452f);
+        ERyder bike1 = new ERyder("1744ef",70,true,765.2f,"ngc232123",193848323);
         bike1.printBikeDetails();
-        bike1.printRideDetails(40);
-        ERyder bike2 = new ERyder("hxjsi",34,true,56.22f);
-        bike2.ride();
+        bike1.printRideDetails(52);
+        ERyder bike2 = new ERyder("1234xx",98,true,23.5f);
         bike2.printBikeDetails();
-        bike2.printRideDetails(54);
-        System.out.println("can't use private calculateFare methods");
-        bike2.publicCalculateFare(54);
-        UserRegistration reg = new UserRegistration();
-        reg.registration();
-        System.out.println(reg.toString());
-        AdminPanel admin = new AdminPanel();
-        admin.userManagementOptions();
+        bike2.printRideDetails(30);
+        bike2.ride();
+
+
+        System.out.println("Can't use the private method directly. Must use another public method.");
+        System.out.println(bike2.getTotalFare(30));
+        String sent1 = "I was very satisfied with the service.";
+        String sent2 = "The e-Bike is quite comfortable to ride.";
+        String sent3 = "The battery life of the e-Bike is impressive.";
+        String sent4 = "The customer support was helpful and responsive.";
+        String sent5 = "I would recommend this e-Bike to my friends and family.";
+        Feedback feedback = new Feedback("John", "Walker", "3422278532@qq.com");
+        feedback.analyseFeedBack(false, sent1, sent2, sent3, sent4, sent5); 
+        System.out.println(feedback);
+
+        UserRegistration userRegistration = new UserRegistration();
+        userRegistration.registration();
+        System.out.println(userRegistration);
+
+        AdminPanel adminPanel = new AdminPanel();
+        adminPanel.userManagementOptions();
     }
 }

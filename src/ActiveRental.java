@@ -1,35 +1,28 @@
 import java.time.LocalDateTime;
-
 public class ActiveRental {
-
-    private String bikeID;
     private String userEmail;
     private LocalDateTime tripStartTime;
-
-    // Constructor
-    public ActiveRental(String bikeID, String userEmail, LocalDateTime tripStartTime) {
-        this.bikeID = bikeID;
+    private String bikeID;
+    public ActiveRental(String bikeID,String userEmail, LocalDateTime tripStartTime) {
         this.userEmail = userEmail;
         this.tripStartTime = tripStartTime;
+        this.bikeID = bikeID;
     }
 
-    // Getters
-    public String getBikeID() {
-        return bikeID;
-    }
-
+    public ActiveRental() {}
+    
     public String getUserEmail() {
         return userEmail;
     }
-
+    public String getBikeID() {
+        return bikeID;
+    }
     public LocalDateTime getTripStartTime() {
         return tripStartTime;
     }
-
     @Override
-    public String toString() {
-        return "Bike ID: " + bikeID +
-                ", User: " + userEmail +
-                ", Trip Started: " + tripStartTime;
+    public String toString(){
+        return "Bike ID:"+bikeID+"\nUser Email:"+userEmail+"Last used time:"
+            +tripStartTime;
     }
 }
